@@ -9,15 +9,10 @@ use serenity::{
 	model::{channel::Message, id::UserId},
 	utils::Colour,
 };
-use std::sync::Arc;
 
 #[command]
 pub async fn get(ctx: &Context, msg: &Message) -> CommandResult {
-	let author_ref = Arc::new(&msg.author);
-	info!(
-		"Recieved a `get` command from {}!",
-		author_ref.clone().name
-	);
+	info!("Recieved a `get` command from {}!", &msg.author.name);
 
 	let mut args = Args::new(&msg.content, &[Delimiter::Single(' ')]);
 	args.advance();
@@ -28,8 +23,7 @@ pub async fn get(ctx: &Context, msg: &Message) -> CommandResult {
 		.ok_or("Failed to get guild from message!")?;
 
 	let user = args.single::<UserId>()?.to_user(ctx).await?;
-	let bors_user =
-		BorsUser::new(Arc::new(&user), Arc::new(guild), ctx).await;
+	let bors_user = BorsUser::new(&user, &guild, ctx).await;
 
 	let bors_user_balance = bors_user.get().await;
 

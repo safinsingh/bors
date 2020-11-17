@@ -2,12 +2,11 @@ use serenity::{
 	http::CacheHttp,
 	model::{guild::Guild, user::User},
 };
-use std::sync::Arc;
 
 pub async fn get_user_nick<'a>(
-	guild: Arc<Guild>,
+	guild: &Guild,
 	ctx: impl CacheHttp,
-	user: Arc<&'a User>,
+	user: &'a User,
 ) -> String {
 	guild
 		.member(ctx, user.id)

@@ -9,14 +9,12 @@ use serenity::{
 	model::{channel::Message, id::UserId},
 	utils::Colour,
 };
-use std::sync::Arc;
 
 #[command]
 pub async fn give(ctx: &Context, msg: &Message) -> CommandResult {
-	let author_ref = Arc::new(&msg.author);
 	info!(
 		"Recieved a `give` command from {}!",
-		author_ref.clone().name
+		&msg.author.clone().name
 	);
 
 	let mut args = Args::new(&msg.content, &[Delimiter::Single(' ')]);
@@ -26,18 +24,15 @@ pub async fn give(ctx: &Context, msg: &Message) -> CommandResult {
 		.guild(ctx)
 		.await
 		.ok_or("Failed to get guild from message!")?;
-	let guild_ref = Arc::new(guild);
+	let guild_ref = &guild;
 
 	let user = args.single::<UserId>()?.to_user(ctx).await?;
 	let amount = args.single::<u64>()?;
 
-	let to =
-		BorsUser::new(Arc::new(&user), guild_ref.clone(), ctx).await;
-	let mut from = BorsUser::new(author_ref, guild_ref, ctx).await;
+	let to = &BorsUser::new(&user, guild_ref, ctx).await;
+	let from = BorsUser::new(&msg.author, guild_ref, ctx).await;
 
-	let to_ref = Arc::new(to);
-
-	if from.transfer(to_ref.clone(), amount).await.is_ok() {
+	if from.transfer(to, amount).await.is_ok() {
 		msg.channel_id
 			.send_message(
 				&ctx.http,
@@ -45,9 +40,7 @@ pub async fn give(ctx: &Context, msg: &Message) -> CommandResult {
 					"Transfer",
 					format!(
 						"{} → {}: `{}`",
-						from.name,
-						to_ref.clone().name,
-						amount
+						from.name, to.name, amount
 					)
 				),
 			)
@@ -66,9 +59,7 @@ pub async fn give(ctx: &Context, msg: &Message) -> CommandResult {
 					format!(
 						"{} → {}: `{}`\n**FAILED**: Sender does not \
 						 have enough coins!",
-						from.name,
-						to_ref.clone().name,
-						amount
+						from.name, to.name, amount
 					)
 				),
 			)
