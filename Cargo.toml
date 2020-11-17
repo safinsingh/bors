@@ -1,0 +1,19 @@
+[package]
+name = "bors"
+version = "0.1.0"
+authors = ["safinsingh <safin.singh@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+anyhow = "1.0.34"
+colored = "2.0.0"
+chrono = "0.4"
+dotenv = "0.15.0"
+lazy_static = "1.4.0"
+serenity = { version="0.9.1", features = ["cache"] }
+sled = "0.34.6"
+tokio = { version = "0.2", features = ["macros"] }
+serde_json = "1.0.59"
+
+[profile.dev]
+debug = 2
