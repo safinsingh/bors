@@ -9,7 +9,7 @@ use serenity::{
 use sled::IVec;
 use std::convert::{TryFrom, TryInto};
 
-pub fn get_user_coins(user: &User) -> u64 {
+pub(crate) fn get_user_coins(user: &User) -> u64 {
 	u64::from_be_bytes(
 		DB.get(user.id.0.to_be_bytes())
 			.unwrap()
@@ -22,12 +22,12 @@ pub fn get_user_coins(user: &User) -> u64 {
 	)
 }
 
-pub fn set_user_coins(id: u64, coins: u64) {
+pub(crate) fn set_user_coins(id: u64, coins: u64) {
 	DB.insert(id.to_be_bytes(), IVec::from(&(coins).to_be_bytes()))
 		.unwrap();
 }
 
-pub async fn get_leaderboard(
+pub(crate) async fn get_leaderboard(
 	guild: Guild,
 	ctx: impl CacheHttp + Copy,
 ) -> impl Iterator<Item = (String, String, bool)> {

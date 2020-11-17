@@ -11,7 +11,10 @@ use serenity::{
 };
 
 #[command]
-pub async fn get(ctx: &Context, msg: &Message) -> CommandResult {
+pub(crate) async fn get(
+	ctx: &Context,
+	msg: &Message,
+) -> CommandResult {
 	info!("Recieved a `get` command from {}!", &msg.author.name);
 
 	let mut args = Args::new(&msg.content, &[Delimiter::Single(' ')]);
@@ -23,7 +26,7 @@ pub async fn get(ctx: &Context, msg: &Message) -> CommandResult {
 		.ok_or("Failed to get guild from message!")?;
 
 	let user = args.single::<UserId>()?.to_user(ctx).await?;
-	let bors_user = BorsUser::new(&user, &guild, ctx).await;
+	let bors_user = BorsUser::new(&user, &guild, &ctx).await;
 
 	let bors_user_balance = bors_user.get().await;
 

@@ -2,4 +2,4 @@
 mod embed;
 mod util;
 
-pub use util::*;
+pub(crate) use util::*;

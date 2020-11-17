@@ -9,7 +9,10 @@ use serenity::{
 };
 
 #[command]
-pub async fn all(ctx: &Context, msg: &Message) -> CommandResult {
+pub(crate) async fn all(
+	ctx: &Context,
+	msg: &Message,
+) -> CommandResult {
 	info!("Recieved an `all` command from {}!", &msg.author.name);
 
 	let guild = msg

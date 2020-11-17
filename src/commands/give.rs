@@ -11,7 +11,10 @@ use serenity::{
 };
 
 #[command]
-pub async fn give(ctx: &Context, msg: &Message) -> CommandResult {
+pub(crate) async fn give(
+	ctx: &Context,
+	msg: &Message,
+) -> CommandResult {
 	info!(
 		"Recieved a `give` command from {}!",
 		&msg.author.clone().name

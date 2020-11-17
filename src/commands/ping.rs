@@ -6,7 +6,10 @@ use serenity::{
 };
 
 #[command]
-pub async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
+pub(crate) async fn ping(
+	ctx: &Context,
+	msg: &Message,
+) -> CommandResult {
 	let time_diff = Utc::now()
 		.signed_duration_since(msg.timestamp)
 		.num_milliseconds();

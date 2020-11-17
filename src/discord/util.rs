@@ -3,7 +3,7 @@ use serenity::{
 	model::{guild::Guild, user::User},
 };
 
-pub async fn get_user_nick(
+pub(crate) async fn get_user_nick(
 	guild: &Guild,
 	ctx: impl CacheHttp,
 	user: &User,
