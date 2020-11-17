@@ -1,4 +1,4 @@
-pub mod all;
-pub mod get;
-pub mod give;
-pub mod ping;
+pub(crate) mod all;
+pub(crate) mod get;
+pub(crate) mod give;
+pub(crate) mod ping;

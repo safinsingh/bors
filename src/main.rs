@@ -33,8 +33,7 @@ lazy_static! {
 #[commands(ping, get, give, all)]
 struct General;
 
-pub struct Handler;
-
+struct Handler;
 #[async_trait]
 impl EventHandler for Handler {
 	async fn ready(&self, _: Context, ready: Ready) {
