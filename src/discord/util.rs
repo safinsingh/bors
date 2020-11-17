@@ -3,10 +3,10 @@ use serenity::{
 	model::{guild::Guild, user::User},
 };
 
-pub async fn get_user_nick<'a>(
+pub async fn get_user_nick(
 	guild: &Guild,
 	ctx: impl CacheHttp,
-	user: &'a User,
+	user: &User,
 ) -> String {
 	guild
 		.member(ctx, user.id)
