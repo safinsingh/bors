@@ -14,5 +14,5 @@ pub async fn get_user_nick<'a>(
 		.await
 		.unwrap()
 		.nick
-		.unwrap_or(user.name.clone())
+		.unwrap_or_else(|| user.name.clone())
 }

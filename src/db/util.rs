@@ -4,11 +4,13 @@ use serenity::model::user::User;
 use sled::IVec;
 use std::{convert::TryInto, sync::Arc};
 
-pub fn get_user_coins<'a>(user: Arc<&'a User>) -> u64 {
+pub fn get_user_coins(user: Arc<&User>) -> u64 {
 	u64::from_be_bytes(
 		DB.get(user.id.0.to_be_bytes())
 			.unwrap()
-			.unwrap_or(IVec::from(&(100 as u64).to_be_bytes()))
+			.unwrap_or_else(|| {
+				IVec::from(&(100 as u64).to_be_bytes())
+			})
 			.to_vec()
 			.try_into()
 			.unwrap(),
