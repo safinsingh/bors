@@ -19,24 +19,8 @@
                     "kind": "bin"
                 }
             },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug unit tests in executable 'bors'",
-            "cargo": {
-                "args": [
-                    "test",
-                    "--no-run",
-                    "--bin=bors",
-                    "--package=bors"
-                ],
-                "filter": {
-                    "name": "bors",
-                    "kind": "bin"
-                }
+            "env": {
+                "LOG": ""
             },
             "args": [],
             "cwd": "${workspaceFolder}"

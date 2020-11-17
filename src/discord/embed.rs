@@ -10,6 +10,18 @@ macro_rules! success_embed {
 	};
 }
 
+macro_rules! success_embed_iter {
+	($iter:expr) => {
+		|message_| {
+			message_.embed(|embed_| {
+				embed_
+					.fields($iter)
+					.colour(Colour::from_rgb(0, 255, 0))
+				})
+			};
+	};
+}
+
 macro_rules! fail_embed {
 	($key:literal, $val:expr) => {
 		|message_| {

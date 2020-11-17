@@ -9,10 +9,12 @@ anyhow = "1.0.34"
 colored = "2.0.0"
 chrono = "0.4"
 dotenv = "0.15.0"
+futures = "0.3.8"
 lazy_static = "1.4.0"
+lazysort = "0.2.1"
 serenity = { version="0.9.1", features = ["cache"] }
 sled = "0.34.6"
-tokio = { version = "0.2", features = ["macros"] }
+tokio = { version = "0.2", features = ["full"] }
 
 [profile.dev]
 debug = 2

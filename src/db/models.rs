@@ -7,35 +7,33 @@ use serenity::{
 	client::Context,
 	model::{guild::Guild, user::User},
 };
-use std::sync::Arc;
 
 pub struct BorsUser<'a> {
 	pub id: u64,
 	pub name: String,
 	pub balance: u64,
-	pub guild: Arc<Guild>,
-	pub ctx: Arc<&'a Context>,
+	pub guild: &'a Guild,
+	pub ctx: &'a Context,
 }
 
 impl<'a> BorsUser<'a> {
 	pub async fn new(
-		user: Arc<&'a User>,
-		guild: Arc<Guild>,
+		user: &'a User,
+		guild: &'a Guild,
 		ctx: &'a Context,
 	) -> BorsUser<'a> {
 		Self {
 			id: user.id.as_u64().to_owned(),
-			balance: get_user_coins(user.clone()),
-			name: get_user_nick(guild.clone(), ctx, user.clone())
-				.await,
-			guild: guild.clone(),
-			ctx: Arc::from(ctx),
+			balance: get_user_coins(user),
+			name: get_user_nick(guild, ctx, user).await,
+			guild: &guild,
+			ctx,
 		}
 	}
 
 	pub async fn transfer(
-		&mut self,
-		to: Arc<BorsUser<'a>>,
+		&self,
+		to: &BorsUser<'a>,
 		amount: u64,
 	) -> anyhow::Result<()> {
 		if self.balance < amount {

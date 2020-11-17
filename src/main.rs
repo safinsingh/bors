@@ -1,15 +1,11 @@
-extern crate dotenv;
+#![feature(async_closure)]
 
-#[macro_use]
-mod log;
-#[macro_use]
-mod discord;
-mod commands;
-mod db;
+extern crate dotenv;
+extern crate lazysort;
 
 use anyhow::{Context as _, Result};
 use colored::Colorize;
-use commands::{get::*, give::*, ping::*};
+use commands::{all::*, get::*, give::*, ping::*};
 use dotenv::dotenv;
 use lazy_static::lazy_static;
 use serenity::{
@@ -19,16 +15,22 @@ use serenity::{
 	model::gateway::Ready,
 	prelude::*,
 };
-use std::{env, sync::Arc};
+use std::env;
+
+#[macro_use]
+mod log;
+#[macro_use]
+mod discord;
+mod commands;
+mod db;
 
 lazy_static! {
 	static ref LOG: bool = env::var_os("LOG").is_some();
-	static ref DB: Arc<sled::Db> =
-		Arc::from(sled::open("bors.db").unwrap());
+	static ref DB: sled::Db = sled::open("bors.db").unwrap();
 }
 
 #[group]
-#[commands(ping, get, give)]
+#[commands(ping, get, give, all)]
 struct General;
 
 pub struct Handler;

@@ -1,10 +1,15 @@
-use crate::DB;
+use crate::{discord::get_user_nick, DB};
 
-use serenity::model::user::User;
+use futures::stream::{self, StreamExt};
+use lazysort::SortedBy;
+use serenity::{
+	http::CacheHttp,
+	model::{guild::Guild, id::UserId, user::User},
+};
 use sled::IVec;
-use std::{convert::TryInto, sync::Arc};
+use std::convert::{TryFrom, TryInto};
 
-pub fn get_user_coins(user: Arc<&User>) -> u64 {
+pub fn get_user_coins(user: &User) -> u64 {
 	u64::from_be_bytes(
 		DB.get(user.id.0.to_be_bytes())
 			.unwrap()
@@ -20,4 +25,51 @@ pub fn get_user_coins(user: Arc<&User>) -> u64 {
 pub fn set_user_coins(id: u64, coins: u64) {
 	DB.insert(id.to_be_bytes(), IVec::from(&(coins).to_be_bytes()))
 		.unwrap();
+}
+
+pub async fn get_leaderboard(
+	guild: Guild,
+	ctx: impl CacheHttp + Copy,
+) -> impl Iterator<Item = (String, String, bool)> {
+	let guild_ref = &guild;
+
+	let records = DB
+		.iter()
+		.map(|r| r.unwrap())
+		.map(|(id, balance)| {
+			(
+				u64::from_be_bytes(id.to_vec().try_into().unwrap()),
+				u64::from_be_bytes(
+					balance.to_vec().try_into().unwrap(),
+				),
+			)
+		})
+		.sorted_by(|a, b| b.1.cmp(&a.1));
+
+	let users = stream::iter(records)
+		.enumerate()
+		.then(async move |(index, (id, balance))| {
+			(
+				format!("#{}.", index + 1),
+				format!(
+					"{}: `{}`",
+					get_user_nick(
+						guild_ref,
+						ctx,
+						&UserId::try_from(id)
+							.unwrap()
+							.to_user(ctx)
+							.await
+							.unwrap(),
+					)
+					.await,
+					balance,
+				),
+				false,
+			)
+		})
+		.collect::<Vec<_>>()
+		.await;
+
+	users.into_iter().take(5)
 }
