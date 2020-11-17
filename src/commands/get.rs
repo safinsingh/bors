@@ -1,4 +1,4 @@
-use crate::DB;
+use crate::db::BorsUser;
 
 use colored::Colorize;
 use serenity::{
@@ -9,14 +9,14 @@ use serenity::{
 	model::{channel::Message, id::UserId},
 	utils::Colour,
 };
-use sled::IVec;
-use std::convert::TryInto;
+use std::sync::Arc;
 
 #[command]
 pub async fn get(ctx: &Context, msg: &Message) -> CommandResult {
+	let author_ref = Arc::new(&msg.author);
 	info!(
 		"Recieved a `get` command from {}!",
-		msg.author.name.clone()
+		author_ref.clone().name
 	);
 
 	let mut args = Args::new(&msg.content, &[Delimiter::Single(' ')]);
@@ -28,30 +28,24 @@ pub async fn get(ctx: &Context, msg: &Message) -> CommandResult {
 		.ok_or("Failed to get guild from message!")?;
 
 	let user = args.single::<UserId>()?.to_user(ctx).await?;
-	let user_nick = guild
-		.member(ctx, user.id)
-		.await?
-		.nick
-		.unwrap_or(user.name.clone());
+	let bors_user =
+		BorsUser::new(Arc::new(&user), Arc::new(guild), ctx).await;
 
-	let value = u64::from_be_bytes(
-		DB.get(user.id.as_u64().to_string())?
-			.unwrap_or(IVec::from(&[0; 8]))
-			.to_vec()
-			.try_into()
-			.unwrap(),
-	);
+	let bors_user_balance = bors_user.get().await;
 
 	msg.channel_id
 		.send_message(
 			&ctx.http,
 			success_embed!(
 				"Balance",
-				format!("{}: `{}`", user_nick, value.to_string())
+				format!(
+					"{}: `{}`",
+					bors_user.name, bors_user_balance
+				)
 			),
 		)
 		.await?;
 
-	success!("Processed `get` command from {}!", user_nick);
+	success!("Processed `get` command from {}!", msg.author.name);
 	Ok(())
 }
