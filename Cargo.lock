@@ -92,7 +92,6 @@ dependencies = [
  "colored",
  "dotenv",
  "lazy_static",
- "serde_json",
  "serenity",
  "sled",
  "tokio",

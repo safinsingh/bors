@@ -3,8 +3,9 @@ extern crate dotenv;
 #[macro_use]
 mod log;
 #[macro_use]
-mod embed;
+mod discord;
 mod commands;
+mod db;
 
 use anyhow::{Context as _, Result};
 use colored::Colorize;
