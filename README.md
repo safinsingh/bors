@@ -1,5 +1,5 @@
-<p align="center" width="400px">
-    <img src="./docs/logo.png" />
+<p align="center">
+    <img src="./docs/logo.png" width="300" />
 </p>
 
 <p align="center">
@@ -22,9 +22,7 @@ Bors is a robust, fast, and thread-safe Discord bot built with Rust. It features
 
 ## ✨ In Action
 
-<p align="center" width="250px">
-    <img src="./docs/action.png" />
-</p>
+<img src="./docs/action.png" width="250" />
 
 ## 🛠️ Usage
 
