@@ -23,13 +23,13 @@ pub(crate) fn get_user_coins(user: &User) -> u64 {
 }
 
 pub(crate) fn set_user_coins(id: u64, coins: u64) {
-	DB.insert(id.to_be_bytes(), IVec::from(&(coins).to_be_bytes()))
+	DB.insert(id.to_be_bytes(), IVec::from(&coins.to_be_bytes()))
 		.unwrap();
 }
 
 pub(crate) async fn get_leaderboard(
 	guild: &Guild,
-	ctx: &(impl CacheHttp + Copy),
+	ctx: &impl CacheHttp,
 ) -> impl Iterator<Item = (String, String, bool)> {
 	let records = DB
 		.iter()

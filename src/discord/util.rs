@@ -13,5 +13,5 @@ pub(crate) async fn get_user_nick(
 		.await
 		.unwrap()
 		.nick
-		.unwrap_or(user.name.to_owned())
+		.unwrap_or_else(|| user.name.to_owned())
 }
