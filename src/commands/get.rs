@@ -27,7 +27,6 @@ pub(crate) async fn get(
 
 	let user = args.single::<UserId>()?.to_user(ctx).await?;
 	let bors_user = BorsUser::new(&user, &guild, &ctx).await;
-
 	let bors_user_balance = bors_user.get().await;
 
 	msg.channel_id

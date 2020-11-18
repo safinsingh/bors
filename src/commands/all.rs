@@ -20,10 +20,9 @@ pub(crate) async fn all(
 		.await
 		.ok_or("Failed to get guild from message!")?;
 
-	let board = get_leaderboard(guild, ctx).await;
-
+	let board = get_leaderboard(&guild, &ctx).await;
 	msg.channel_id
-		.send_message(&ctx.http, success_embed_iter!(board))
+		.send_message(&ctx.http, success_embed!(board))
 		.await?;
 
 	success!("Processed `all` command from {}!", msg.author.name);

@@ -5,7 +5,7 @@ use serenity::{
 
 pub(crate) async fn get_user_nick(
 	guild: &Guild,
-	ctx: impl CacheHttp,
+	ctx: &impl CacheHttp,
 	user: &User,
 ) -> String {
 	guild
@@ -13,5 +13,5 @@ pub(crate) async fn get_user_nick(
 		.await
 		.unwrap()
 		.nick
-		.unwrap_or_else(|| user.name.clone())
+		.unwrap_or(user.name.to_owned())
 }

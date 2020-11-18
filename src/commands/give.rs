@@ -15,10 +15,7 @@ pub(crate) async fn give(
 	ctx: &Context,
 	msg: &Message,
 ) -> CommandResult {
-	info!(
-		"Recieved a `give` command from {}!",
-		&msg.author.clone().name
-	);
+	info!("Recieved a `give` command from {}!", &msg.author.name);
 
 	let mut args = Args::new(&msg.content, &[Delimiter::Single(' ')]);
 	args.advance();
@@ -48,10 +45,9 @@ pub(crate) async fn give(
 				),
 			)
 			.await?;
-
 		success!(
 			"Processed `give` command from {}!",
-			msg.author.name.clone()
+			&msg.author.name
 		);
 	} else {
 		msg.channel_id
@@ -69,7 +65,7 @@ pub(crate) async fn give(
 			.await?;
 		warn!(
 			"Recieved an invalid `give` command from {}",
-			msg.author.name.clone()
+			&msg.author.name
 		);
 	}
 	Ok(())

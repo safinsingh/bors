@@ -1,21 +1,18 @@
 macro_rules! success_embed {
-	($key:literal, $val:expr) => {
-		|message_| {
-			message_.embed(|embed_| {
-				embed_
-					.field($key.to_string(), $val.to_string(), true)
-					.colour(Colour::from_rgb(0, 255, 0))
-				})
-			};
-	};
-}
-
-macro_rules! success_embed_iter {
 	($iter:expr) => {
 		|message_| {
 			message_.embed(|embed_| {
 				embed_
 					.fields($iter)
+					.colour(Colour::from_rgb(0, 255, 0))
+				})
+			};
+	};
+	($key:literal, $val:expr) => {
+		|message_| {
+			message_.embed(|embed_| {
+				embed_
+					.field($key.to_string(), $val.to_string(), true)
 					.colour(Colour::from_rgb(0, 255, 0))
 				})
 			};

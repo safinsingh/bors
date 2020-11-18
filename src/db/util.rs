@@ -28,11 +28,9 @@ pub(crate) fn set_user_coins(id: u64, coins: u64) {
 }
 
 pub(crate) async fn get_leaderboard(
-	guild: Guild,
-	ctx: impl CacheHttp + Copy,
+	guild: &Guild,
+	ctx: &(impl CacheHttp + Copy),
 ) -> impl Iterator<Item = (String, String, bool)> {
-	let guild_ref = &guild;
-
 	let records = DB
 		.iter()
 		.map(|r| r.unwrap())
@@ -54,7 +52,7 @@ pub(crate) async fn get_leaderboard(
 				format!(
 					"{}: `{}`",
 					get_user_nick(
-						guild_ref,
+						guild,
 						ctx,
 						&UserId::try_from(id)
 							.unwrap()

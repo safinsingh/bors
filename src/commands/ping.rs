@@ -10,12 +10,16 @@ pub(crate) async fn ping(
 	ctx: &Context,
 	msg: &Message,
 ) -> CommandResult {
-	let time_diff = Utc::now()
-		.signed_duration_since(msg.timestamp)
-		.num_milliseconds();
-
 	msg.channel_id
-		.say(ctx, format!("Pong!\nAPI Latency: {} ms", time_diff))
+		.say(
+			ctx,
+			format!(
+				"Pong!\nAPI Latency: {} ms",
+				Utc::now()
+					.signed_duration_since(msg.timestamp)
+					.num_milliseconds()
+			),
+		)
 		.await?;
 	Ok(())
 }
